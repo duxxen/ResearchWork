@@ -1,0 +1,88 @@
+TEST: int
+SIZE: 10000
+BITS: 128
+RESULTS: {
+    add: 2.060s
+    mul: 8.033s
+    div: 18.963s
+    and: 4.430s
+    xor: 4.426s
+    abs: 0.000s
+    neg: 0.000s
+}
+TEST: int
+SIZE: 10000
+BITS: 256
+RESULTS: {
+    add: 3.025s
+    mul: 18.100s
+    div: 24.518s
+    and: 4.838s
+    xor: 4.946s
+    abs: 0.000s
+    neg: 0.000s
+}
+TEST: int
+SIZE: 10000
+BITS: 512
+RESULTS: {
+    add: 4.875s
+    mul: 52.196s
+    div: 32.198s
+    and: 5.488s
+    xor: 5.785s
+    abs: 0.000s
+    neg: 0.001s
+}
+TEST: int
+SIZE: 10000
+BITS: 1024
+RESULTS: {
+    add: 8.230s
+    mul: 178.591s
+    div: 41.818s
+    and: 6.907s
+    xor: 7.282s
+    abs: 0.001s
+    neg: 0.000s
+}
+TEST: float
+SIZE: 10000
+BITS: 128
+RESULTS: {
+    add: 8.309s
+    mul: 19.606s
+    div: 32.355s
+    abs: 0.000s
+    neg: 0.000s
+}
+TEST: float
+SIZE: 10000
+BITS: 256
+RESULTS: {
+    add: 9.954s
+    mul: 33.199s
+    div: 57.335s
+    abs: 0.000s
+    neg: 0.000s
+}
+TEST: float
+SIZE: 10000
+BITS: 512
+RESULTS: {
+    add: 13.379s
+    mul: 87.472s
+    div: 121.787s
+    abs: 0.000s
+    neg: 0.001s
+}
+TEST: float
+SIZE: 10000
+BITS: 1024
+RESULTS: {
+    add: 18.049s
+    mul: 300.014s
+    div: 364.658s
+    abs: 0.000s
+    neg: 0.000s
+}
