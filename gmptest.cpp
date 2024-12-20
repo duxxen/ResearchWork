@@ -1,4 +1,8 @@
 #include "gmptest.h"
+#include <cstdint>
+#include <cstdlib>
+#include <cstdio>
+#include <ctime>
 
 void init_rand(mpz_t* array, size_t size, mp_bitcnt_t bits, gmp_randstate_t rstate)
 {
@@ -11,7 +15,7 @@ void init_rand(mpz_t* array, size_t size, mp_bitcnt_t bits, gmp_randstate_t rsta
 
 void init_rand(mpf_t* array, size_t size, mp_bitcnt_t bits, gmp_randstate_t rstate)
 {
-	mpf_set_default_prec(bits);
+	mpf_set_default_prec(10);
 	for (size_t i = 0; i < size; i++)
 	{
 		mpf_init(array[i]);
@@ -31,118 +35,121 @@ void clear_array(mpf_t* array, size_t size)
 		mpf_clear(array[i]);
 }
 
-double bin_gmptest(mpz_t* array, size_t size, bin_funcz_t func)
+double gmp_test(mpz_t* array, size_t size, bmpz_func_t func)
 {
-	mpz_t tempres;
-	mpz_init(tempres);
+	mpz_t result;
+	mpz_init(result);
 
 	clock_t clbeg = clock();
 	for (size_t i = 0; i < size; i++)
 		for (size_t j = 0; j < size; j++)
-			func(tempres, array[i], array[j]);
+			func(result, array[i], array[j]);
 	clock_t clend = clock();
+	mpz_clear(result);
 
-	mpz_clear(tempres);
 	return (clend - clbeg) / (double)CLOCKS_PER_SEC;
 }
 
-double bin_gmptest(mpf_t* array, size_t size, bin_funcf_t func)
+double gmp_test(mpz_t* array, size_t size, bmpz_ui_func_t func, mpir_ui op)
 {
-	mpf_t tempres;
-	mpf_init(tempres);
+	mpz_t result;
+	mpz_init(result);
+
+	clock_t clbeg = clock();
+	for (size_t i = 0; i < size; i++)
+		func(result, array[i], op);		
+	clock_t clend = clock();
+	mpz_clear(result);
+
+	return (clend - clbeg) / (double)CLOCKS_PER_SEC;
+}
+
+double gmp_test(mpf_t* array, size_t size, bmpf_func_t func)
+{
+	mpf_t result;
+	mpf_init(result);
 
 	clock_t clbeg = clock();
 	for (size_t i = 0; i < size; i++)
 		for (size_t j = 0; j < size; j++)
-			func(tempres, array[i], array[j]);
+			func(result, array[i], array[j]);
 	clock_t clend = clock();
+	mpf_clear(result);
 
-	mpf_clear(tempres);
 	return (clend - clbeg) / (double)CLOCKS_PER_SEC;
 }
 
-double un_gmptest(mpz_t* array, size_t size, un_funcz_t func)
+double gmp_test(mpf_t* array, size_t size, bmpf_ui_func_t func, mpir_ui op)
 {
-	mpz_t tempres;
-	mpz_init(tempres);
+	mpf_t result;
+	mpf_init(result);
 
 	clock_t clbeg = clock();
 	for (size_t i = 0; i < size; i++)
-			func(tempres, array[i]);
+		func(result, array[i], op);
 	clock_t clend = clock();
+	mpf_clear(result);
 
-	mpz_clear(tempres);
 	return (clend - clbeg) / (double)CLOCKS_PER_SEC;
 }
 
-double un_gmptest(mpf_t* array, size_t size, un_funcf_t func)
+double gmp_test(mpf_t* array, size_t size)
 {
-	mpf_t tempres;
-	mpf_init(tempres);
+	mpf_t result;
+	mpf_init(result);
 
 	clock_t clbeg = clock();
 	for (size_t i = 0; i < size; i++)
-			func(tempres, array[i]);
+		mpf_sqrt(result, array[i]);
 	clock_t clend = clock();
+	mpf_clear(result);
 
-	mpf_clear(tempres);
 	return (clend - clbeg) / (double)CLOCKS_PER_SEC;
 }
 
-void runtest(FILE* fout, mpz_t* array, size_t size, mp_bitcnt_t bits, gmp_randstate_t rstate)
+void inttest(FILE* fout, mpz_t* array, size_t size, mp_bitcnt_t bits, gmp_randstate_t rstate)
 {
+	mpir_ui argui(POWM_DEFAULT);
 	fprintf_s(fout, "TEST: int\nSIZE: %zu\nBITS: %zu\nRESULTS: {\n", size, bits);
+
 	init_rand(array, size, bits, rstate);
-	for (size_t i = 0; i < bin_funcs_count; i++)
-	{
-		double duration = bin_gmptest(array, size, bin_funcsz[i]);
-		fprintf_s(fout, "    %s: %.3fs\n", bin_func_names[i], duration);
-	}
-	for (size_t i = 0; i < un_funcs_count; i++)
-	{
-		double duration = un_gmptest(array, size, un_funcsz[i]);
-		fprintf_s(fout, "    %s: %.3fs\n", un_func_names[i], duration);
-	}
+	fprintf_s(fout, "   add: %.3fs\n", gmp_test(array, size, mpz_add));
+	fprintf_s(fout, "   mul: %.3fs\n", gmp_test(array, size, mpz_mul));
+	fprintf_s(fout, "   div: %.3fs\n", gmp_test(array, size, mpz_div));
+	fprintf_s(fout, "   powui: %.3fs\n", gmp_test(array, size, mpz_pow_ui, argui));
+	fprintf_s(fout, "   rootui: %.3fs\n}\n", gmp_test(array, size, mpz_root_ui, argui));
 	clear_array(array, size);
-	fprintf_s(fout, "}\n");
 }
 
-void runtest(FILE* fout, mpf_t* array, size_t size, mp_bitcnt_t bits, gmp_randstate_t rstate)
+void floattest(FILE* fout, mpf_t* array, size_t size, mp_bitcnt_t bits, gmp_randstate_t rstate)
 {
-	fprintf_s(fout, "TEST: float\nSIZE: %zu\nBITS: %zu\nRESULTS: {\n", size, bits);
+	mpir_ui argui(POWM_DEFAULT);
+	fprintf_s(fout, "TEST: float\nSIZE: %zu\nRESULTS: {\n", size);
+
 	init_rand(array, size, bits, rstate);
-	for (size_t i = 0; i < bin_funcs_count - 2; i++)
-	{
-		double duration = bin_gmptest(array, size, bin_funcsf[i]);
-		fprintf_s(fout, "    %s: %.3fs\n", bin_func_names[i], duration);
-	}
-	for (size_t i = 0; i < un_funcs_count; i++)
-	{
-		double duration = un_gmptest(array, size, un_funcsf[i]);
-		fprintf_s(fout, "    %s: %.3fs\n", un_func_names[i], duration);
-	}
+	fprintf_s(fout, "   add: %.3fs\n", gmp_test(array, size, mpf_add));
+	fprintf_s(fout, "   mul: %.3fs\n", gmp_test(array, size, mpf_mul));
+	fprintf_s(fout, "   div: %.3fs\n", gmp_test(array, size, mpf_div));
+	fprintf_s(fout, "   powui: %.3fs\n", gmp_test(array, size, mpf_pow_ui, argui));
+	fprintf_s(fout, "   sqrt: %.3fs\n}\n", gmp_test(array, size));
 	clear_array(array, size);
-	fprintf_s(fout, "}\n");
 }
 
-void testprogram(FILE* fout, size_t arrsize)
+void gmp_testprogram(FILE* fout, size_t size)
 {
 	gmp_randstate_t rstate;
 	gmp_randinit_default(rstate);
 
-	mpz_t* zarray = new mpz_t[arrsize];
-	mpf_t* farray = new mpf_t[arrsize];
+	mpz_t* zarray = new mpz_t[size];
+	mpf_t* farray = new mpf_t[size];
 
-	runtest(fout, zarray, arrsize, 128U, rstate);
-	runtest(fout, zarray, arrsize, 256U, rstate);
-	runtest(fout, zarray, arrsize, 512U, rstate);
-	runtest(fout, zarray, arrsize, 1024U, rstate);
+	inttest(fout, zarray, size, 128U, rstate);
+	inttest(fout, zarray, size, 256U, rstate);
+	inttest(fout, zarray, size, 512U, rstate);
+	inttest(fout, zarray, size, 1024U, rstate);
 
-	runtest(fout, farray, arrsize, 128U, rstate);
-	runtest(fout, farray, arrsize, 256U, rstate);
-	runtest(fout, farray, arrsize, 512U, rstate);
-	runtest(fout, farray, arrsize, 1024U, rstate);
-	
+	floattest(fout, farray, size, 1024U, rstate);
+
 	delete[] zarray;
 	delete[] farray;
 }
