@@ -1,0 +1,53 @@
+NTL Lib Test Prorgam
+
+TEST: int
+SIZE: 1000
+BITS: 128
+RESULTS: {
+   add: 0.333s
+   mul: 0.945s
+   div: 0.590s
+   powui: 0.001s
+   sqrt: 0.001s
+}
+TEST: int
+SIZE: 1000
+BITS: 256
+RESULTS: {
+   add: 0.348s
+   mul: 2.208s
+   div: 0.704s
+   powui: 0.001s
+   sqrt: 0.001s
+}
+TEST: int
+SIZE: 1000
+BITS: 512
+RESULTS: {
+   add: 0.410s
+   mul: 6.240s
+   div: 0.941s
+   powui: 0.001s
+   sqrt: 0.001s
+}
+TEST: int
+SIZE: 1000
+BITS: 1024
+RESULTS: {
+   add: 0.483s
+   mul: 19.227s
+   div: 1.450s
+   powui: 0.001s
+   sqrt: 0.001s
+}
+TEST: float
+SIZE: 1000
+RESULTS: {
+   add: 0.875s
+   mul: 1.280s
+   div: 2.766s
+   powui: 0.001s
+   sqrt: 0.001s
+}
+
+Test time: 38.820s

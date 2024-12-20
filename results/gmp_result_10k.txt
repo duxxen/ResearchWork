@@ -1,0 +1,53 @@
+GMP Lib Test Prorgam
+
+TEST: int
+SIZE: 10000
+BITS: 128
+RESULTS: {
+   add: 2.059s
+   mul: 7.991s
+   div: 19.421s
+   powui: 0.002s
+   rootui: 0.012s
+}
+TEST: int
+SIZE: 10000
+BITS: 256
+RESULTS: {
+   add: 2.991s
+   mul: 17.863s
+   div: 24.932s
+   powui: 0.003s
+   rootui: 0.023s
+}
+TEST: int
+SIZE: 10000
+BITS: 512
+RESULTS: {
+   add: 4.844s
+   mul: 51.951s
+   div: 32.514s
+   powui: 0.007s
+   rootui: 0.038s
+}
+TEST: int
+SIZE: 10000
+BITS: 1024
+RESULTS: {
+   add: 8.163s
+   mul: 177.407s
+   div: 40.417s
+   powui: 0.015s
+   rootui: 0.050s
+}
+TEST: float
+SIZE: 10000
+RESULTS: {
+   add: 7.918s
+   mul: 19.012s
+   div: 41.564s
+   powui: 0.005s
+   sqrt: 0.005s
+}
+
+Test time: 459.229s
