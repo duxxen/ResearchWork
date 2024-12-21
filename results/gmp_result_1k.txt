@@ -8,7 +8,7 @@ RESULTS: {
    mul: 0.079s
    div: 0.193s
    powui: 0.001s
-   rootui: 0.001s
+   sqrt: 0.001s
 }
 TEST: int
 SIZE: 1000
@@ -17,8 +17,8 @@ RESULTS: {
    add: 0.029s
    mul: 0.186s
    div: 0.247s
-   powui: 0.000s
-   rootui: 0.003s
+   powui: 0.001s
+   sqrt: 0.003s
 }
 TEST: int
 SIZE: 1000
@@ -27,8 +27,8 @@ RESULTS: {
    add: 0.048s
    mul: 0.533s
    div: 0.322s
-   powui: 0.000s
-   rootui: 0.004s
+   powui: 0.001s
+   sqrt: 0.004s
 }
 TEST: int
 SIZE: 1000
@@ -38,7 +38,7 @@ RESULTS: {
    mul: 1.783s
    div: 0.411s
    powui: 0.002s
-   rootui: 0.005s
+   sqrt: 0.005s
 }
 TEST: float
 SIZE: 1000
